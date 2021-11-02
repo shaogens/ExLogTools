@@ -1,11 +1,13 @@
 #
+# Exiles Log Tools
 #
-#
+# Stuff for processing the conan log file in real time.
 
 import PySimpleGUI as sg
 import ctypes
 import platform
 from main import ExiLogger
+from jparse import jconf
 
 def make_dpi_aware():
 	# Fix blurry text on high dpi monitors
@@ -15,12 +17,16 @@ def make_dpi_aware():
         ctypes.windll.shcore.SetProcessDpiAwareness(True)
         
 OutVals = ""
-logThread = ""
+#logThread = ""
 Logging = 0
+capture = False
+
+config = jconf()
+LogPath = config.config("LogPath")
         
 Layout = [
-		[sg.Text("Log File:"),sg.Input(size=(80,0),key="LogPath"),sg.FileBrowse(file_types=(("Log Files","*.log"),))],
-		[sg.Button("Start Capture",key="CaptureStart"),sg.Button("Stop Capture",key="CaptureStop"),sg.Text("  "),sg.Button("Clear Counters",key="CounterClear"),sg.Button("Clear Window",key="WindowClear")],
+		[sg.Text("Log File:"),sg.Input(LogPath,size=(80,0),key="LogPath"),sg.FileBrowse(file_types=(("Log Files","*.log"),))],
+		[sg.Button("Start Capture",key="CaptureToggle"),sg.Text("  "),sg.Button("Reset Counters",key="CounterClear"),sg.Button("Clear Window",key="WindowClear")],
 		[sg.Text("Combat Log:")],
 		[sg.Listbox(values=(OutVals),size=(100,20),enable_events=True,key="LogOutput")]
 	]
@@ -42,21 +48,19 @@ while True:
 		# Clear log in window
 		Logging.ClearWindow(window)
 		
-	elif event == "CaptureStop":
-		# Stop capturing logs
-		#capture_stop(logThread,xEvent)
-		Logging.stop()
-		
-	elif event == "CaptureStart":
-		# Start capturing logs
-		#print("Values: ")
-		#print(repr(values))
-		
-		Logging = ExiLogger()
-		Logging.start(window,values['LogPath'],True)
-		#print("LogPath  : {0}".format(values['LogPath']))
-		#logThread, xEvent = capture_start(window,values['LogPath'],True)
-		#toggle_xEvent("start",xEvent)
+	elif event == "CaptureToggle":
+		# Toggle between starting/stopping capture of log
+		if capture == False:
+			# Start
+			Logging = ExiLogger()
+			Logging.start(window,values['LogPath'],True)
+			# Rename button to stop			
+			window['CaptureToggle'].update("Stop Capture")			
+			capture = True
+		elif capture == True:
+			Logging.stop()
+			window['CaptureToggle'].update("Start Capture")		
+			capture = False
 		
 	elif event == sg.WIN_CLOSED:
 		break
