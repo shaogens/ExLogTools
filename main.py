@@ -16,7 +16,7 @@ class ExiLogger:
 		while keepalive:
 			if self.xEvent.is_set():
 				keepalive = False
-				print("Keep Alive: FALSE")
+				#print("Keep Alive: FALSE")
 			line = thefile.readline()
 			if not line:
 				time.sleep(0.1)
@@ -33,11 +33,11 @@ class ExiLogger:
 		
 	def stop(self):
 		# Stop Capturing
-		print("Setting event")
+		#print("Setting event")
 		self.xEvent.set()
 		
-		if self.xEvent.is_set():
-			print("Event is set true")
+		#if self.xEvent.is_set():
+			#print("Event is set true")
 			
 	def capture(self,window,logpath,keepalive):
 	    logfile = open(logpath,"r")

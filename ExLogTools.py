@@ -9,6 +9,8 @@ import platform
 from main import ExiLogger
 from jparse import jconf
 
+VERSION = "1.0"
+
 def make_dpi_aware():
 	# Fix blurry text on high dpi monitors
 	# reqs: ctypes, platform
@@ -17,15 +19,18 @@ def make_dpi_aware():
         ctypes.windll.shcore.SetProcessDpiAwareness(True)
         
 OutVals = ""
-#logThread = ""
 Logging = 0
 capture = False
 
+# If json file exists, grab last used log path
 config = jconf()
 LogPath = config.config("LogPath")
+#print("Startup Log Path")
+#print(repr(LogPath))
+
         
 Layout = [
-		[sg.Text("Log File:"),sg.Input(LogPath,size=(80,0),key="LogPath"),sg.FileBrowse(file_types=(("Log Files","*.log"),))],
+		[sg.Text("Log File:"),sg.Input(LogPath,size=(80,0),key="LogPath"),sg.FileBrowse(file_types=(("Log Files","*.log"),)),sg.Button("About",key="About")],
 		[sg.Button("Start Capture",key="CaptureToggle"),sg.Text("  "),sg.Button("Reset Counters",key="CounterClear"),sg.Button("Clear Window",key="WindowClear")],
 		[sg.Text("Combat Log:")],
 		[sg.Listbox(values=(OutVals),size=(100,20),enable_events=True,key="LogOutput")]
@@ -50,6 +55,7 @@ while True:
 		
 	elif event == "CaptureToggle":
 		# Toggle between starting/stopping capture of log
+		
 		if capture == False:
 			# Start
 			Logging = ExiLogger()
@@ -57,12 +63,20 @@ while True:
 			# Rename button to stop			
 			window['CaptureToggle'].update("Stop Capture")			
 			capture = True
+			updateret = config.update("Config",{"LogPath": values['LogPath']})
 		elif capture == True:
 			Logging.stop()
 			window['CaptureToggle'].update("Start Capture")		
 			capture = False
+			
+	elif event == "About":
+		sg.popup("Exile Log Tools","Version: " + VERSION)
 		
 	elif event == sg.WIN_CLOSED:
 		break
 	
-window.close()
+winret = window.close()
+if capture == True:
+	# Insure logging has stopped when closing to prevent app from becoming a zombie
+	Logging.stop()
+
