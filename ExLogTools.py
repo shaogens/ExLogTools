@@ -33,7 +33,8 @@ Layout = [
 		[sg.Text("Log File:"),sg.Input(LogPath,size=(80,0),key="LogPath"),sg.FileBrowse(file_types=(("Log Files","*.log"),)),sg.Button("About",key="About")],
 		[sg.Button("Start Capture",key="CaptureToggle"),sg.Text("  "),sg.Button("Reset Counters",key="CounterClear"),sg.Button("Clear Window",key="WindowClear")],
 		[sg.Text("Combat Log:")],
-		[sg.Listbox(values=(OutVals),size=(100,20),enable_events=True,key="LogOutput")]
+		[sg.Multiline(size=(100,20),autoscroll=True,write_only=True,disabled=True,key="LogOutput")]
+		#[sg.Listbox(values=(OutVals),size=(100,20),enable_events=True,key="LogOutput")]
 	]
         
 	
@@ -47,7 +48,7 @@ while True:
 	
 	if event == "CounterClear":
 		# Clear Counters
-		Logging.ResetCounters()
+		Logging.ResetCounters(window)
 		
 	elif event == "WindowClear":
 		# Clear log in window

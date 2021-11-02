@@ -64,16 +64,18 @@ class ExiLogger:
 	    		if hit < self.lastLow:
 	    			self.lastLow = hit
 	    		
-	    		LogReport.append("DMG: {0} [Lo:{1}/Hi:{2}] PEN: {3} ARM: {4} Visual: {5}".format(hit,self.lastLow,self.lastHigh,split2[10],split2[14],split2[6]))
+	    		#LogReport.append("DMG: {0} [Lo:{1}/Hi:{2}] PEN: {3} ARM: {4} Visual: {5}".format(hit,self.lastLow,self.lastHigh,split2[10],split2[14],split2[6]))
 	    		#print("DMG: {0} [hi:{1}/lo:{2}] PEN: {3} ARM: {4} Visual: {5}".format(hit,lastHigh,lastLow,split2[10],split2[14],split2[6]))
-	    		window['LogOutput'].update(values=(LogReport))
+	    		#window['LogOutput'].update(values=(LogReport))
+	    		window['LogOutput'].print("DMG: {0} [Lo:{1}/Hi:{2}] PEN: {3} ARM: {4} Visual: {5}".format(hit,self.lastLow,self.lastHigh,split2[10],split2[14],split2[6]))
 
-	def ResetCounters(self):
-		print("Reset Counters")
+	def ResetCounters(self,window):
+		#print("Reset Counters")
 		self.lastHigh = 0
 		self.lastLow = 10000
+		window['LogOutput'].print("-- Counters Reset --")
 		
 	def ClearWindow(self,window):
-		print("Clear Window")
+		#print("Clear Window")
 		LogReport = []
-		window['LogOutput'].update(values=(LogReport))
+		window['LogOutput'].update("")
