@@ -8,6 +8,8 @@ from pathlib import Path
 
 class jconf:
 
+	data = ""
+
 	def __init__(self):
 		HomeDir = Path(__file__).parent
 		SavesFile = HomeDir.joinpath('ExLogTools.json')
@@ -43,11 +45,11 @@ class jconf:
 			
 	def config(self,setting):
 		# Pull up a setting
+		ret = False
 		for i in self.data['Config']:
 			for i2 in i:
 				if i == setting:
 					ret = self.data['Config'][i]
-					
 		return ret
 		
 		
