@@ -9,7 +9,7 @@ import platform
 from main import ExiLogger
 from jparse import jconf
 
-VERSION = "1.0"
+VERSION = "1.1"
 
 def make_dpi_aware():
 	# Fix blurry text on high dpi monitors
